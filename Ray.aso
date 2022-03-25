@@ -1,0 +1,9 @@
+DATASEG
+
+struc Ray method {
+    
+}
+ends Ray
+
+TBLINST
+

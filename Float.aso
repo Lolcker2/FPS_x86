@@ -1,0 +1,14 @@
+DATASEG
+
+struc float method {
+    integer:dword = F_int
+	addition:dword = F_addition
+	subtruction:dword = F_subtruction
+	multiplication:dword = F_multiplication
+	divition:dword = F_divition
+}
+    significand dd ?
+    exponent dw 1
+ends float
+
+TBLINST
