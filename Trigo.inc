@@ -1,16 +1,20 @@
+NOWARN
 DATASEG
-	depth dw 10	;// the depth for the loop at the tylor series
+	tri_depth dw 10	;// the depth for the loop at the tylor series
 
 CODESEG
 
 
-proc F_cos basic far
+
+;// %exponent_overflow @@result	;// corrects the exponent of @@result (if it needs a correction)
+
+
+proc cos basic far
 uses bx, eax, edx
-arg returns @@result:dword, @@num:dword
-	mov bp, si
+arg returns @@result:ptr Float, @@num:dword
 	
-	counter equ bx	;// pointer so si, di, bp, or bx
-	mov counter, [depth]
+	counter equ bh	;// pointer so si, di, bp, or bx
+	mov counter, [tri_depth]	;// set counter to max_count, then dec each time
 	
 	@@loop1:
 	
@@ -43,14 +47,32 @@ arg returns @@result:dword, @@num:dword
 		
 		
 		mov edx, two_count_fact	;//  (counter * 2)!
-		div edx		;// eax -> [(-1)^counter * num^(2 * counter)] : (counter * 2)!
+		div edx		;// eax -> [(-1)^counter * num^(2 * counter)] : (counter * 2)!  , the whole part
+		;// edx -> the decimal part
+		%digits edx	;// pushes the number of digits at the decimal part of the current element from the series
+		pop[bl]	;// retrive that into bl
 		
-		add [@@result], eax		;// resut += [(-1)^counter * num^(2 * counter)] : (counter * 2)!
+		@@int_shift_loop1:	;// shifting the whole part left, by num_of_digits(decimal part)
+			%sl eax	;// shifting the whole part left
+			pop[eax]	;// retriving that into eax
+		
+			dec bl	;// dec the inner_loop counter
+			cmp	bl, 00	;// if bl isn't zero
+			jne @@int_shift_loop1	;// then loop that
+			
+		add eax, edx
+		
+		mov si, [@@result]	;// accessing @@result
+		
+		add [ds:si + Float.significand], eax		;// result += [(-1)^counter * num^(2 * counter)] : (counter * 2)!
 		
 		dec counter
 		cmp counter, 00
 		jne @@loop1
+		
+	mov si, [@@result]	;// accessing @@result
 	
+		;// clac the  exponent
 	ret
 endp F_cos
 
@@ -61,12 +83,12 @@ endp F_cos
 
 
 
-proc F_sin basic far
+proc sin basic far
 uses bx, eax, edx
-arg returns @@result:dword, @@num:dword
+arg returns @@result:ptr Float, @@num:dword
 	
 	counter equ bx	;// pointer so si, di, bp, or bx
-	mov counter, [depth]
+	mov counter, [tri_depth]	;// set counter to max_count, then dec each time
 	
 	@@loop1:
 	
@@ -100,14 +122,30 @@ arg returns @@result:dword, @@num:dword
 		
 		
 		mov edx, two_count_fact	;//  (counter * 2 + 1)!
-		div edx		;// eax -> [(-1)^counter * num^(2 * counter + 1)] : (counter * 2 + 1)!
+		div edx		;// eax -> [(-1)^counter * num^(2 * counter + 1)] : (counter * 2 + 1)!  , the whole part
+		;// edx -> the decimal part
+		%digits edx	;// pushes the number of digits at the decimal part of the current element from the series
+		pop[bl]	;// retrive that into bl
 		
-		add [@@result], eax		;// resut += [(-1)^counter * num^(2 * counter + 1)] : (counter * 2 + 1)!
+		@@int_shift_loop1:	;// shifting the whole part left, by num_of_digits(decimal part)
+			%sl eax	;// shifting the whole part left
+			pop[eax]	;// retriving that into eax
+		
+			dec bl	;// dec the inner_loop counter
+			cmp	bl, 00	;// if bl isn't zero
+			jne @@int_shift_loop1	;// then loop that
+			
+		add eax, edx
+		
+		mov si, [@@result]	;// accessing @@result
+		
+		add [ds:si + Float.significand], eax	;// result += [(-1)^counter * num^(2 * counter + 1)] : (counter * 2 + 1)!	
 		
 		dec counter
 		cmp counter, 00
 		jne @@loop1
 		
+	;// clac the  exponent
 	ret
 endp F_sin
 

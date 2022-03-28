@@ -3,7 +3,17 @@ DATASEG
 struc Ray method {
     
 }
+
+angle Float ?
+dist_to_wall Float ?
+hit_wall db ?
+; eye_x dd ?
+; eye_y dd ?
+; coord_x dd ?
+; coord_y dd ?
+
 ends Ray
+
 
 TBLINST
 

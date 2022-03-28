@@ -4,15 +4,6 @@ DATASEG
 
 CODESEG
 
-
-;// pushed the last allocated pointer to the stack 
-proc get_pointer basic far
-	mov si, [malloc_index]	;// gets the current index
-	push [word ptr Malloc + si]	;// pushes the current element
-	ret 0
-endp get_pointer
-
-
 ;// appends ECX to the fake stack 'Malloc'
 proc Fake_push basic far 
 	inc si;// next index (init must be: mov si, [malloc_index])

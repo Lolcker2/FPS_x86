@@ -1,28 +1,32 @@
 CODESEG
+include "macros.inc"
+include "Float.inc"
+include "Ray.inc"
+include "Trigo.inc"
+include "var.inc"
 
 
-
-;// returns num^pow as a word
+;// returns num^pow as a dword
 proc power basic far
-uses ax, bx, cx
-arg returns @@result:word, @@num:word, @@pow:byte
-	mov bh, [@@pow]	;// prep for comparing pow to zero
+uses eax, ebx, ecx
+arg returns @@result:dword, @@num:dword, @@pow:word
+	mov bx, [@@pow]	;// prep for comparing pow to zero
 	mov [@@result], 1
 	
 	@@loop_start:	
-		cmp bh, 00
+		cmp bx, 00
 		jz	@@loop_end ;// if pow is zero, end the calculation
 		
 		;// else (pow is not zero),
 		;// (it be greater than zero)
 		
-		mov cx, [@@num]
-		mov ax, [@@result]
+		mov ecx, [@@num]
+		mov eax, [@@result]
 		
-		mul cx	;// multiplying result by num, the result goes to DX|AX,
+		mul ecx	;// multiplying result by num, the result goes to DX|AX,
 		;// though i only need the first 16bits (AKA word), (AX)
 		
-		mov [@@result], ax	;// result = result * num
+		mov [@@result], eax	;// result = result * num
 		jmp @@loop_start	;// loop that
 	@@loop_end:
 	ret
@@ -70,7 +74,7 @@ endp factorial
 ;// shifts any base 10 number,
 ;// one digit to the left
 proc shift_left basic far
-uses eax, ebx
+uses eax, ebx, edx
 arg returns @@result:dword, @@num:dword
 
 	mov eax, [@@num]
@@ -81,5 +85,44 @@ arg returns @@result:dword, @@num:dword
 endp shift_left
 
 
+
+
+;// shifts any base 10 number,
+;// one digit to the right
+proc shift_right basic far
+uses eax, ebx, edx
+arg returns @@result:dword, @@num:dword
+
+	mov eax, [@@num]
+	mov ebx, 10	
+	div ebx	;// nultiply @@num by 10
+	mov [@@result], eax	;// set the result
+	ret	;// return
+endp shift_right
+
+
+proc num_of_digits basic far
+uses eax, ecx
+arg returns @@digits:byte, @@num:dword
+
+	counter equ cl	;// for comfort reasons
+	mov counter, 00	;// reset the counter
+	
+	mov eax, [@@num]	;// inserting @@num into eax, to preform instructions on it
+	
+	@@loop1:
+		
+		cmp eax,00	;// compare num to zero
+		je @@loop_end	;// if it is, then stop looping, isn't, then continue
+		
+		%sr eax		;// shift num to the right (010 -> 001)
+		pop[eax]	;// num = shift_right(num)
+		inc counter	;//	counter++
+		jmp @@loop1	;// loop that
+	@@loop_end:
+	
+	mov [@@digits], counter	;// return the number of digits
+	ret	;// return
+endp num_of_digits
 
 

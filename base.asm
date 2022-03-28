@@ -2,40 +2,26 @@
 IDEAL
 MODEL small
 STACK 100h
+;NOWARN
 DATASEG
 ; --------------------------
-
+Playerx Float ?
+Playery Float ?
 ; --------------------------
 CODESEG
 
-include "macros.inc"
 include "utills.inc"
-include "Float.inc"
-include "Ray.inc"
-include "Trigo.inc"
-include "var.inc"
+
 
 start:
 	mov ax, @data
 	mov ds, ax	
 ; --------------------------
+proc main basic far
+	
 
-mov bp, sp
-%alloc 2, varA
-
-mov dx, varA
-;mov dl, 2
-mov ah, 2h
-int 21h
-
-%alloc 3, varA
-
-;// the ascii 3
-mov dx, varA
-mov ah, 2h
-int 21h
-
-
+	ret
+endp main
 ; --------------------------
 	
 exit:

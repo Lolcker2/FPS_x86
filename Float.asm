@@ -1,3 +1,6 @@
+DATASEG
+	max_exponent dw 5
+
 CODESEG
 
 
@@ -40,6 +43,7 @@ arg returns @@result: ptr Float, @@self:ptr Float, @@num:ptr Float
 		jne @@Addition1		;// if self.significand isn't zero, jump to the next section
 		
 		mov si, [@@result]	;// accessing @@result
+		mov si, [@@result]
 		mov [ds:si + Float.significand], ebx	;// set result.significand
 		mov [ds:si + Float.exponent], cx	;// set result.exponent
 		ret	;// return
@@ -51,6 +55,7 @@ arg returns @@result: ptr Float, @@self:ptr Float, @@num:ptr Float
 		;// so return self
 		cmp ebx, 00
 		jne @@Addition2
+		mov si, [@@result]
 		mov [ds:si + Float.significand], eax	;// set result.significand
 		mov [ds:si + Float.exponent], dx	;// set result.exponent
 		ret	;// return
@@ -69,6 +74,7 @@ arg returns @@result: ptr Float, @@self:ptr Float, @@num:ptr Float
 		;// then self.exponent == num.exponent
 		;// meaning, I can add the significands, then return the result
 		add eax, ebx	;// adds the significands 
+		mov si, [@@result]	;// accessing result
 		mov [ds:si + Float.exponent], dx	;// set result.exponent
 		mov [ds:si + Float.significand], eax	;// set result.significand
 		ret	;// return
@@ -92,6 +98,7 @@ arg returns @@result: ptr Float, @@self:ptr Float, @@num:ptr Float
 			
 			cmp counter, 00
 			jne @@loop1		;// if the loop isn't done, loop it
+			mov
 			jmp @@Addition3	;// if it's done, then the exponents are equal
 	
 	
@@ -106,7 +113,7 @@ arg returns @@result: ptr Float, @@self:ptr Float, @@num:ptr Float
 		
 		@@loop2:
 			
-			%sl eax	;// shifts left slef.significand
+			%sl eax	;// shifts left self.significand
 			pop [eax]	;// retriving the shifted significand
 			
 			inc dx	;// increment self.exponent
@@ -115,6 +122,8 @@ arg returns @@result: ptr Float, @@self:ptr Float, @@num:ptr Float
 			cmp counter, 00
 			jne @@loop2		;// if the loop isn't done, loop it
 			jmp @@Addition3	;// if it's done, then the exponents are equal
+			
+		%exponent_overflow @@result	;// corrects the exponent of @@result (if it needs a correction)
 	ret
 endp F_addition
 
@@ -198,6 +207,7 @@ arg returns @@result:ptr Float, @@self:ptr Float, @@num:ptr Float
 	mov si, [@@result]
 	mov [ds:si + Float.significand], eax	;// result.significand = self.significand * num.significand
 	
+	%exponent_overflow @@result	;// corrects the exponent of @@result (if it needs a correction)
 	ret	;// return
 endp F_multiplication
 
