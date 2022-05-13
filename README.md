@@ -1,6 +1,6 @@
 # tk
 
-tk is a game similar to Doom 2, ro wolfenstein 3D.
+tk is a game similar to Doom 2, or wolfenstein 3D.
 
 this project has 2 parts:
 - the first one being a game engine so tk could be run, the game engine uses RayCasting in order to deliver the illusion of 3D space
@@ -8,7 +8,7 @@ this project has 2 parts:
 
 tk is a level based game, where you must go through the whole level in order to progress to the next one, though you can think of tk as a game where you must treverse the narrow, but long world, and there are check points along the way.
 
-let me explain:
+Let me explain:
 
 ![WhatsApp Image 2022-05-13 at 5 47 09 PM](https://user-images.githubusercontent.com/61828051/168308994-da705561-5378-4f80-9a15-308c7183bf04.jpeg)
 
@@ -16,12 +16,27 @@ let me explain:
 * purple-> doorways / pathways between levels
 * while-> the outline of the whole world
 
-*you can treat the game with respect to the black borders (each level).
-*or treat it with respect to the white outline (the whole world), an acknowledge that the purple doorways act like checkpoints
+*you can treat the game with respect to the black borders (each level).*
+*or treat it with respect to the white outline (the whole world), an acknowledge that the purple doorways act like checkpoints*
 
 
+</br>
+</br>
+</br>
+
+The gameplay loop would go somthing like:
+
+- **Treverse the map**
+- **Watch out for enemys**
+- **Found one, shoot it**
+- **And remember to watch your back...**
 
 
+Currentaly, tk hasn't been started yet, since im working on the game engine itself.
+
+</br>
+</br>
+Let me walk you through the code:
 
 
 			
