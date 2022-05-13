@@ -32,10 +32,12 @@ The gameplay loop would go somthing like:
 - **And remember to watch your back...**
 
 
-Currentaly, tk hasn't been started yet, since im working on the game engine itself.
+</br>
+</br>
 
-</br>
-</br>
+tk hasn't been started yet, since im working on the game engine itself.
+
+
 Let me walk you through the code:
 
 
